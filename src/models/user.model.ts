@@ -5,6 +5,7 @@ interface IUser extends Document {
   name: string;
   email: string;
   role: "manager" | "employee";
+  password: string;
 }
 
 // Define the user schema
@@ -23,8 +24,14 @@ const userSchema = new Schema<IUser>({
     enum: ["manager", "employee"],
     default: "employee",
   },
+
+  password: {
+    type: String,
+    required: true,
+  },
 });
 
 // Create and export the user model
 const User = mongoose.model<IUser>("User", userSchema);
 export default User;
+export { IUser };
