@@ -23,9 +23,11 @@ export const signup = async (req: Request, res: Response) => {
   }
 };
 
-export const signin = (req: Request, res: Response) => {
-  User.findOne({ email: req.body.email }, (err: Error, user: IUser) => {
-    if (err || !user) {
+export const signin = async (req: Request, res: Response) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+
+    if (!user) {
       return ResponseHandler.error(
         res,
         401,
@@ -59,7 +61,9 @@ export const signin = (req: Request, res: Response) => {
         });
       }
     );
-  });
+  } catch (error) {
+    ResponseHandler.internalServerError(res, error);
+  }
 };
 
 export const signout = (req: Request, res: Response) => {
