@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-// database.connect(process.env.MONGODB_URI as string);
+database.connect(process.env.MONGO_URI as string);
 
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
