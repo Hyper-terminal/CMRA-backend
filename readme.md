@@ -15,22 +15,19 @@ This project is developed to assist companies in management and handling tasks.
 - Mongoose
 
 ## Folder Structure
-CMRA/
-│
-├── routes/                 # Folder for route definitions
-│   └── ...
-│
-├── middlewares/            # Folder for middleware functions
-│   └── ...
-│
-├── controllers/            # Folder for controller functions
-│   └── ...
-│
-├── libs/                   # Folder for external libraries
-│   └── ...
-│
-└── models/                 # Folder for database models
-    └── ...
+
+- **CMRA/**
+  - **routes/**: Contains route definitions.
+    - *...*
+  - **middlewares/**: Middleware functions.
+    - *...*
+  - **controllers/**: Controller functions.
+    - *...*
+  - **libs/**: External libraries.
+    - *...*
+  - **models/**: Database models.
+    - *...*
+
 
 ## Package Manager
 - Yarn
