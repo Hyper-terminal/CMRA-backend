@@ -22,6 +22,12 @@ const userSchema = new Schema<IUser>({
     type: String,
     required: true,
   },
+
+  phone: {
+    type: Number,
+    required: true,
+    unique: true,
+  },
 });
 
 // Create and export the user model
