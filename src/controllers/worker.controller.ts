@@ -30,9 +30,13 @@ export const createWorker = async (req: IRequest, res: Response) => {
     await newWorker.save();
 
     // Respond with the created worker document
-    ResponseHandler.created(res, "Worker created successfully", newWorker);
+    return ResponseHandler.created(
+      res,
+      "Worker created successfully",
+      newWorker
+    );
   } catch (error) {
     // If an error occurs, respond with an error message
-    ResponseHandler.internalServerError(res, error);
+    return ResponseHandler.internalServerError(res, error);
   }
 };

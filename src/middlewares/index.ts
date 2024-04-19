@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import jwt from "jsonwebtoken";
+import ResponseHandler from "../libs";
 
 export interface IRequest extends Request {
   user: any;
@@ -29,6 +30,6 @@ export const requireSignin = (
       return res.status(401).json({ error: "Invalid token" });
     }
     // Handle other errors as needed
-    return res.status(500).json({ error: "Internal Server Error" });
+    return ResponseHandler.internalServerError(res, error);
   }
 };
