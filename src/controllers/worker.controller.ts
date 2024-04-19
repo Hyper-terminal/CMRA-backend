@@ -36,6 +36,7 @@ export const createWorker = async (req: IRequest, res: Response) => {
       newWorker
     );
   } catch (error) {
+    console.error(error);
     // If an error occurs, respond with an error message
     return ResponseHandler.internalServerError(res, error);
   }

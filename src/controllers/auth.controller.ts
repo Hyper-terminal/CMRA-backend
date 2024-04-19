@@ -54,10 +54,10 @@ export const signin = async (req: Request, res: Response) => {
         expirationDate.setTime(expirationDate.getTime() + 9999);
         res.cookie("t", token, { expires: expirationDate });
 
-        const { _id, name, email } = user;
+        const { _id, name, email, role } = user;
         ResponseHandler.success(res, "Signin success", {
           token,
-          user: { _id, name, email },
+          user: { _id, name, email, role },
         });
       }
     );
