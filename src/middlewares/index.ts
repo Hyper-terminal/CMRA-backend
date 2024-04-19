@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 
 import jwt from "jsonwebtoken";
 
-interface IRequest extends Request {
+export interface IRequest extends Request {
   user: any;
 }
 

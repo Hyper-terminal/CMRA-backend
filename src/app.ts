@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import express, { Express } from "express";
-import { userRoutes, authRoutes } from "./routes";
+import { userRoutes, authRoutes, workerRoutes } from "./routes";
 import database from "./libs/database";
 import cors from "cors";
 import helmet from "helmet";
@@ -26,6 +26,7 @@ database.connect(process.env.MONGO_URI as string);
 
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
+app.use("/worker", workerRoutes);
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);
