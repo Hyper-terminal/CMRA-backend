@@ -28,6 +28,8 @@ const userSchema = new Schema<IUser>({
     required: true,
     unique: true,
   },
+  timestamps: true
+  
 });
 
 // Create and export the user model

@@ -24,6 +24,8 @@ const taskSchema = new Schema<ITask>({
       ref: "User",
     },
   ],
+  timestamps: true
+  
 });
 
 // Create and export the user model

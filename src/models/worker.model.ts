@@ -83,6 +83,7 @@ const workerSchema = new Schema<IWorker>({
       },
     },
   },
+  timestamps: true
 });
 
 const Worker = mongoose.model("Worker", workerSchema);

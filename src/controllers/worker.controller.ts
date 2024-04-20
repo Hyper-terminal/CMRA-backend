@@ -1,6 +1,7 @@
 import { Response } from "express";
 import { IRequest } from "../middlewares";
 import Worker from "../models/worker.model";
+import Task from "../models/task.model";
 import ResponseHandler from "../libs";
 
 export const createWorker = async (req: IRequest, res: Response) => {
@@ -39,5 +40,29 @@ export const createWorker = async (req: IRequest, res: Response) => {
     console.error(error);
     // If an error occurs, respond with an error message
     return ResponseHandler.internalServerError(res, error);
+  }
+};
+
+export const getAllWorkers = async (req: IRequest, res: Response) => {
+  try {
+    // extract query params
+    const { search } = req.query;
+    let query = {};
+
+    if (search) {
+      query = {
+        $or: [{ name: { $regex: new RegExp(search as string, "i") } }],
+      };
+    }
+    // const skip: number = ((page as number) - 1) * (pageSize as number);
+
+    const results = Worker.find(query).populate({
+      path: "tasks",
+      model: Task,
+    });
+
+    return ResponseHandler.success(res, "", results);
+  } catch (err) {
+    return ResponseHandler.internalServerError(res, err);
   }
 };
