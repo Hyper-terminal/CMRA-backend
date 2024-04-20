@@ -58,6 +58,9 @@ export const getAllWorkers = async (req: IRequest, res: Response) => {
 
     const skip = ((page as number) - 1) * parseInt(pageSize as any);
 
+    // Count total number of workers that match the query
+    const totalCount: number = await Worker.countDocuments(query);
+
     const results: IWorker[] = await Worker.find(query)
       .populate({
         path: "tasks",
@@ -66,7 +69,7 @@ export const getAllWorkers = async (req: IRequest, res: Response) => {
       .skip(skip)
       .limit(parseInt(pageSize as string));
 
-    return ResponseHandler.success(res, "", results);
+    return ResponseHandler.success(res, "", { results, totalCount });
   } catch (err) {
     return ResponseHandler.internalServerError(res, err);
   }
