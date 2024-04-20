@@ -31,5 +31,4 @@ export interface IWorker extends Document {
       phone: number;
     };
   };
-  timestamps: boolean;
 }

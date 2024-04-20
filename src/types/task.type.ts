@@ -5,5 +5,4 @@ export interface ITask extends Document {
   status: "Pending" | "Completed" | "Not Assigned";
   assignedWorkers: Types.ObjectId[];
   assignedServiceManager: Types.ObjectId[];
-  timestamps: boolean;
 }
