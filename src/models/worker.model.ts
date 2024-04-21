@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { IWorker } from "../types/worker.type";
+import autoIncrement from "mongoose-auto-increment";
 
 const workerSchema = new Schema<IWorker>(
   {
@@ -66,21 +67,21 @@ const workerSchema = new Schema<IWorker>(
       mother: {
         name: {
           type: String,
-          required: true,
+          required: false,
         },
         phone: {
           type: Number,
-          required: true,
+          required: false,
         },
       },
       spouse: {
         name: {
           type: String,
-          required: true,
+          required: false,
         },
         phone: {
           type: Number,
-          required: true,
+          required: false,
         },
       },
     },
@@ -89,5 +90,12 @@ const workerSchema = new Schema<IWorker>(
 );
 
 const Worker = mongoose.model("Worker", workerSchema);
+
+// autoIncrement.initialize(mongoose.connection);
+workerSchema.plugin(autoIncrement.plugin, {
+  model: "Worker",
+  field: "employeeId",
+  startAt: 1,
+});
 
 export default Worker;

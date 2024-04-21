@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import autoIncrement from "mongoose-auto-increment";
 
 class Database {
   public async connect(
@@ -7,10 +8,12 @@ class Database {
   ): Promise<void> {
     try {
       if (mongoose.connection.readyState === 1) {
+        autoIncrement.initialize(mongoose.connection);
         console.log("Already connected to MongoDB");
       } else {
         await mongoose.connect(url, options);
         console.log("Connected to MongoDB");
+        autoIncrement.initialize(mongoose.connection);
       }
     } catch (error: any) {
       console.error("Failed to connect to MongoDB:", error?.message || error);
@@ -27,7 +30,10 @@ class Database {
         console.log("Disconnected from MongoDB");
       }
     } catch (error: any) {
-      console.error("Failed to disconnect from MongoDB:", error?.message || error);
+      console.error(
+        "Failed to disconnect from MongoDB:",
+        error?.message || error
+      );
       throw error;
     }
   }
