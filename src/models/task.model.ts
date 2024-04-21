@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { ITask } from "../types/task.type";
 
-// Define the user schema
+// Define the task schema
 const taskSchema = new Schema<ITask>(
   {
     description: {
@@ -25,11 +25,14 @@ const taskSchema = new Schema<ITask>(
         ref: "User",
       },
     ],
+    service: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Service",
+    },
   },
-
   { timestamps: true }
 );
 
-// Create and export the user model
+// Create and export the task model
 const Task = mongoose.model<ITask>("Task", taskSchema);
 export default Task;

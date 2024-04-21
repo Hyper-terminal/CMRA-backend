@@ -1,10 +1,7 @@
 import express from "express";
-import {
-  createWorker,
-  getAllWorkers,
-  getTotalSalary,
-} from "../controllers/worker.controller";
+import { createWorker, getAllWorkers } from "../controllers/worker.controller";
 import { requireSignin } from "../middlewares";
+import { getTotalSalary } from "../controllers/employee.controller";
 
 const router = express.Router();
 

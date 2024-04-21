@@ -1,15 +1,14 @@
 import express from "express";
 import {
-  createWorker,
-  getAllWorkers,
+  getAllService,
   getTotalSalary,
-} from "../controllers/worker.controller";
+} from "../controllers/service.controller";
 import { requireSignin } from "../middlewares";
 
 const router = express.Router();
 
-router.post("/create", requireSignin as any, createWorker as any);
-router.get("/", requireSignin as any, getAllWorkers as any);
+router.get("/", requireSignin as any, getAllService as any);
+
 router.get("/totalSalary", requireSignin as any, getTotalSalary as any);
 
 export default router;

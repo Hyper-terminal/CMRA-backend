@@ -4,7 +4,14 @@ import express, { Express } from "express";
 import helmet from "helmet";
 import hpp from "hpp";
 import database from "./libs/database";
-import { authRoutes, userRoutes, workerRoutes } from "./routes";
+import {
+  authRoutes,
+  employeeRoutes,
+  serviceRoutes,
+  taskRoutes,
+  userRoutes,
+  workerRoutes,
+} from "./routes";
 
 dotenv.config();
 
@@ -27,6 +34,9 @@ database.connect(process.env.MONGO_URI as string);
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/worker", workerRoutes);
+app.use("/employee", employeeRoutes);
+app.use("/task", taskRoutes);
+app.use("/service", serviceRoutes);
 
 app.listen(port, () => {
   console.log(`[server]: Server is running at http://localhost:${port}`);

@@ -1,11 +1,11 @@
 import { Response } from "express";
 import ResponseHandler from "../libs";
 import { IRequest } from "../middlewares";
+import Employee from "../models/employee.model";
 import Task from "../models/task.model";
-import Worker from "../models/worker.model";
-import { IWorker } from "../types/worker.type";
+import { IEmployee } from "../types/employee.type";
 
-export const createWorker = async (req: IRequest, res: Response) => {
+export const createEmployee = async (req: IRequest, res: Response) => {
   try {
     const {
       name,
@@ -21,8 +21,8 @@ export const createWorker = async (req: IRequest, res: Response) => {
       return ResponseHandler.error(res, 400, "Please provide family details");
     }
 
-    // Create a new worker document
-    const newWorker = new Worker({
+    // Create a new Employee document
+    const newEmployee = new Employee({
       name,
       contact,
       tasks,
@@ -32,14 +32,14 @@ export const createWorker = async (req: IRequest, res: Response) => {
       familyDetails,
     });
 
-    // Save the worker document to the database
-    await newWorker.save();
+    // Save the Employee document to the database
+    await newEmployee.save();
 
-    // Respond with the created worker document
+    // Respond with the created Employee document
     return ResponseHandler.created(
       res,
-      "Worker created successfully",
-      newWorker
+      "Employee created successfully",
+      newEmployee
     );
   } catch (error) {
     console.error(error);
@@ -48,7 +48,7 @@ export const createWorker = async (req: IRequest, res: Response) => {
   }
 };
 
-export const getAllWorkers = async (req: IRequest, res: Response) => {
+export const getAllEmployees = async (req: IRequest, res: Response) => {
   try {
     // extract query params
     const { search, page = 1, pageSize = 20 } = req.query;
@@ -62,10 +62,10 @@ export const getAllWorkers = async (req: IRequest, res: Response) => {
 
     const skip = ((page as number) - 1) * parseInt(pageSize as any);
 
-    // Count total number of workers that match the query
-    const totalCount: number = await Worker.countDocuments(query);
+    // Count total number of Employees that match the query
+    const totalCount: number = await Employee.countDocuments(query);
 
-    const results: IWorker[] = await Worker.find(query)
+    const results: IEmployee[] = await Employee.find(query)
       .populate({
         path: "tasks",
         model: Task,
@@ -81,7 +81,7 @@ export const getAllWorkers = async (req: IRequest, res: Response) => {
 
 export const getTotalSalary = async (req: IRequest, res: Response) => {
   try {
-    const results = await Worker.aggregate([
+    const results = await Employee.aggregate([
       {
         $group: {
           _id: null,
