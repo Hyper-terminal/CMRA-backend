@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import ResponseHandler from "../libs";
 import User from "../models/user.model";
 
-const TOKEN_EXPIRY = "1h"; // Example: Token expiry time
+const TOKEN_EXPIRY = "7d"; // Example: Token expiry time
 
 export const signup = async (req: Request, res: Response) => {
   try {
@@ -24,6 +24,7 @@ export const signup = async (req: Request, res: Response) => {
     const token = jwt.sign({ _id: user._id }, process.env.SECRET!, {
       expiresIn: TOKEN_EXPIRY,
     });
+
     const expirationDate = new Date();
     expirationDate.setTime(expirationDate.getTime() + 9999);
     res.cookie("t", token, { expires: expirationDate });
@@ -54,6 +55,7 @@ export const signin = async (req: Request, res: Response) => {
       req.body.password,
       user.password
     );
+
     if (!passwordMatch) {
       return ResponseHandler.error(res, 401, "Email and password do not match");
     }
@@ -61,6 +63,7 @@ export const signin = async (req: Request, res: Response) => {
     const token = jwt.sign({ _id: user._id }, process.env.SECRET!, {
       expiresIn: TOKEN_EXPIRY,
     });
+
     const expirationDate = new Date();
     expirationDate.setTime(expirationDate.getTime() + 9999);
     res.cookie("t", token, { expires: expirationDate });
