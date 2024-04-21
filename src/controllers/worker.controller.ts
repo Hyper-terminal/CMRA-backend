@@ -17,6 +17,10 @@ export const createWorker = async (req: IRequest, res: Response) => {
       familyDetails,
     } = req.body;
 
+    if (familyDetails?.length < 1) {
+      return ResponseHandler.error(res, 400, "Please provide family details");
+    }
+
     // Create a new worker document
     const newWorker = new Worker({
       name,

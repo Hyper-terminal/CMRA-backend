@@ -15,20 +15,9 @@ export interface IWorker extends Document {
     panCard?: string;
   };
   salary: number;
-  employeeId?: string;
   dateOfBirth: string;
   familyDetails: {
-    father: {
-      name: string;
-      phone: number;
-    };
-    mother: {
-      name: string;
-      phone: number;
-    };
-    spouse: {
-      name: string;
-      phone: number;
-    };
-  };
+    name: string;
+    phone: number;
+  }[];
 }

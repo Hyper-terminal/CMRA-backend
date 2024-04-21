@@ -43,17 +43,12 @@ const workerSchema = new Schema<IWorker>(
       type: Number,
       required: true,
     },
-    employeeId: {
-      type: String,
-      unique: true, // Ensure employeeId is unique
-      index: true, // Add an index for faster lookup
-    },
     dateOfBirth: {
       type: String,
       required: true,
     },
-    familyDetails: {
-      father: {
+    familyDetails: [
+      {
         name: {
           type: String,
           required: true,
@@ -63,27 +58,7 @@ const workerSchema = new Schema<IWorker>(
           required: true,
         },
       },
-      mother: {
-        name: {
-          type: String,
-          required: false,
-        },
-        phone: {
-          type: Number,
-          required: false,
-        },
-      },
-      spouse: {
-        name: {
-          type: String,
-          required: false,
-        },
-        phone: {
-          type: Number,
-          required: false,
-        },
-      },
-    },
+    ],
   },
   { timestamps: true }
 );
