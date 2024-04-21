@@ -1,10 +1,10 @@
+import cors from "cors";
 import dotenv from "dotenv";
 import express, { Express } from "express";
-import { userRoutes, authRoutes, workerRoutes } from "./routes";
-import database from "./libs/database";
-import cors from "cors";
 import helmet from "helmet";
 import hpp from "hpp";
+import database from "./libs/database";
+import { authRoutes, userRoutes, workerRoutes } from "./routes";
 
 dotenv.config();
 

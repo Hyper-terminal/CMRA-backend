@@ -21,7 +21,6 @@
     "hpp": "^0.2.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.2.0",
-    "mongoose-auto-increment": "^5.0.1",
     "xss": "^1.0.15"
   },
   "devDependencies": {
