@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 import ResponseHandler from "../libs";
 import User from "../models/user.model";
 
+const TOKEN_EXPIRY = "1h"; // Example: Token expiry time
+
 export const signup = async (req: Request, res: Response) => {
   try {
     const userExists = await User.findOne({ email: req.body.email });
@@ -12,12 +14,25 @@ export const signup = async (req: Request, res: Response) => {
       return ResponseHandler.error(res, 403, "Email is taken");
     }
 
-    const user = new User(req.body);
     const hash = await bcrypt.hash(req.body.password, 10);
-    user.password = hash;
+    const user = new User({
+      ...req.body,
+      password: hash,
+    });
     await user.save();
 
-    ResponseHandler.success(res, "Signup success! Please login.");
+    const token = jwt.sign({ _id: user._id }, process.env.SECRET!, {
+      expiresIn: TOKEN_EXPIRY,
+    });
+    const expirationDate = new Date();
+    expirationDate.setTime(expirationDate.getTime() + 9999);
+    res.cookie("t", token, { expires: expirationDate });
+
+    const { _id, name, email, role } = user;
+    ResponseHandler.success(res, "Signup success! Please login.", {
+      token,
+      user: { _id, name, email, role },
+    });
   } catch (error) {
     ResponseHandler.internalServerError(res, error);
   }
@@ -35,32 +50,26 @@ export const signin = async (req: Request, res: Response) => {
       );
     }
 
-    bcrypt.compare(
+    const passwordMatch = await bcrypt.compare(
       req.body.password,
-      user.password,
-      function (compareErr, result) {
-        if (compareErr || !result) {
-          return ResponseHandler.error(
-            res,
-            401,
-            "Email and password do not match"
-          );
-        }
-
-        const token = jwt.sign({ _id: user._id }, process.env.SECRET!, {
-          expiresIn: "1h",
-        });
-        const expirationDate = new Date();
-        expirationDate.setTime(expirationDate.getTime() + 9999);
-        res.cookie("t", token, { expires: expirationDate });
-
-        const { _id, name, email, role } = user;
-        ResponseHandler.success(res, "Signin success", {
-          token,
-          user: { _id, name, email, role },
-        });
-      }
+      user.password
     );
+    if (!passwordMatch) {
+      return ResponseHandler.error(res, 401, "Email and password do not match");
+    }
+
+    const token = jwt.sign({ _id: user._id }, process.env.SECRET!, {
+      expiresIn: TOKEN_EXPIRY,
+    });
+    const expirationDate = new Date();
+    expirationDate.setTime(expirationDate.getTime() + 9999);
+    res.cookie("t", token, { expires: expirationDate });
+
+    const { _id, name, email, role } = user;
+    ResponseHandler.success(res, "Signin success", {
+      token,
+      user: { _id, name, email, role },
+    });
   } catch (error) {
     ResponseHandler.internalServerError(res, error);
   }
