@@ -1,8 +1,13 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
 import { IEmployee } from "../types/employee.type";
 
 const employeeSchema = new Schema<IEmployee>(
   {
+    employeeId: {
+      type: String,
+      unique: true,
+    },
+
     name: {
       type: String,
       required: true,
@@ -62,6 +67,38 @@ const employeeSchema = new Schema<IEmployee>(
   },
   { timestamps: true }
 );
+
+// Define pre-save middleware to auto-increment employeeId
+employeeSchema.pre<IEmployee>("save", async function (next) {
+  const companyName = "IN";
+  const constructorMethod = this.constructor as Model<IEmployee>;
+  if (!this.isNew) {
+    // If document is not new, do nothing
+    return next();
+  }
+
+  try {
+    const lastWorker = await constructorMethod.findOne(
+      {},
+      {},
+      { sort: { employeeId: -1 } }
+    );
+
+    if (lastWorker) {
+      // If there are existing workers, increment the employeeId
+      const newIncrementalId =
+        parseInt(lastWorker.employeeId.split(companyName)[1]) + 1;
+      this.employeeId = companyName + newIncrementalId;
+    } else {
+      // If no workers exist, start from 1
+      this.employeeId = companyName + 1;
+    }
+
+    return next();
+  } catch (error: any) {
+    return next(error);
+  }
+});
 
 const Employee = mongoose.model("Employee", employeeSchema);
 

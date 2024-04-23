@@ -2,6 +2,7 @@ import { Document } from "mongoose";
 import { ITask } from "./task.type";
 
 export interface IEmployee extends Document {
+  employeeId: string;
   name: string;
   contact: {
     email?: string;
