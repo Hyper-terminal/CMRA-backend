@@ -22,7 +22,7 @@ const taskSchema = new Schema<ITask>(
     assignedServiceManager: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "Employee",
       },
     ],
     service: {

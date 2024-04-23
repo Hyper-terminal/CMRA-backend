@@ -34,6 +34,10 @@ class Database {
       throw error;
     }
   }
+
+  public async strictMode(): Promise<void> {
+    await mongoose.set("strict", true);
+  }
 }
 
 export default new Database();

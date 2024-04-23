@@ -29,6 +29,8 @@ app.use(helmet());
 // to prevent parameter pollution
 app.use(hpp());
 
+// database
+database.strictMode();
 database.connect(process.env.MONGO_URI as string);
 
 app.use("/auth", authRoutes);

@@ -112,19 +112,20 @@ export const getWorkerById = async (req: IRequest, res: Response) => {
 
 export const updateWorker = async (req: IRequest, res: Response) => {
   try {
-    // Find the Worker document with the provided id and update it with the data in req.body.
-    const response = await Worker.findByIdAndUpdate(req.params.id, req.body, {
-      new: true, // Return the updated document instead of the original.
-    });
+    const existingWorker = await Worker.findById(req.params.id);
 
-    if (!response) {
+    if (!existingWorker) {
       return ResponseHandler.error(res, 404, "Worker not found");
     }
+
+    Object.assign(existingWorker, req.body);
+
+    const updatedWorker = await existingWorker.save();
 
     return ResponseHandler.success(
       res,
       "Worker updated successfully",
-      response
+      updatedWorker
     );
   } catch (error) {
     // If an error occurs, send an error message in the response.

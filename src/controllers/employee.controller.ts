@@ -111,19 +111,20 @@ export const getEmployeeById = async (req: IRequest, res: Response) => {
 
 export const updateEmployee = async (req: IRequest, res: Response) => {
   try {
-    // Find the Employee document with the provided id and update it with the data in req.body.
-    const response = await Employee.findByIdAndUpdate(req.params.id, req.body, {
-      new: true, // Return the updated document instead of the original.
-    });
+    const existingEmployee = await Employee.findById(req.params.id);
 
-    if (!response) {
+    if (!existingEmployee) {
       return ResponseHandler.error(res, 404, "Employee not found");
     }
+
+    Object.assign(existingEmployee, req.body);
+
+    const updatedEmployee = await existingEmployee.save();
 
     return ResponseHandler.success(
       res,
       "Employee updated successfully",
-      response
+      updatedEmployee
     );
   } catch (error) {
     // If an error occurs, send an error message in the response.
