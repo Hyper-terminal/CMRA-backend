@@ -70,6 +70,7 @@ export const getAllEmployees = async (req: IRequest, res: Response) => {
         path: "tasks",
         model: Task,
       })
+      .sort({ updatedAt: -1 })
       .skip(skip)
       .limit(parseInt(pageSize as string));
 
@@ -89,6 +90,19 @@ export const getTotalSalary = async (req: IRequest, res: Response) => {
         },
       },
     ]);
+    return ResponseHandler.success(res, "", results);
+  } catch (error) {
+    return ResponseHandler.internalServerError(res, error);
+  }
+};
+
+export const getEmployeeById = async (req: IRequest, res: Response) => {
+  try {
+    const { id } = req.query;
+    const results = await Employee.findById(id).populate({
+      path: "tasks",
+      model: Task,
+    });
     return ResponseHandler.success(res, "", results);
   } catch (error) {
     return ResponseHandler.internalServerError(res, error);
