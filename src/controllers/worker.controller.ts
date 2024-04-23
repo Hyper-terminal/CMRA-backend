@@ -103,8 +103,31 @@ export const getWorkerById = async (req: IRequest, res: Response) => {
       path: "tasks",
       model: Task,
     });
+
     return ResponseHandler.success(res, "", results);
   } catch (error) {
+    return ResponseHandler.internalServerError(res, error);
+  }
+};
+
+export const updateWorker = async (req: IRequest, res: Response) => {
+  try {
+    // Find the Worker document with the provided id and update it with the data in req.body.
+    const response = await Worker.findByIdAndUpdate(req.params.id, req.body, {
+      new: true, // Return the updated document instead of the original.
+    });
+
+    if (!response) {
+      return ResponseHandler.error(res, 404, "Worker not found");
+    }
+
+    return ResponseHandler.success(
+      res,
+      "Worker updated successfully",
+      response
+    );
+  } catch (error) {
+    // If an error occurs, send an error message in the response.
     return ResponseHandler.internalServerError(res, error);
   }
 };

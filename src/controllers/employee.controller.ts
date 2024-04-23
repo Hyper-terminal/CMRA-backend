@@ -108,3 +108,25 @@ export const getEmployeeById = async (req: IRequest, res: Response) => {
     return ResponseHandler.internalServerError(res, error);
   }
 };
+
+export const updateEmployee = async (req: IRequest, res: Response) => {
+  try {
+    // Find the Employee document with the provided id and update it with the data in req.body.
+    const response = await Employee.findByIdAndUpdate(req.params.id, req.body, {
+      new: true, // Return the updated document instead of the original.
+    });
+
+    if (!response) {
+      return ResponseHandler.error(res, 404, "Employee not found");
+    }
+
+    return ResponseHandler.success(
+      res,
+      "Employee updated successfully",
+      response
+    );
+  } catch (error) {
+    // If an error occurs, send an error message in the response.
+    return ResponseHandler.internalServerError(res, error);
+  }
+};

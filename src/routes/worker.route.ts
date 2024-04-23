@@ -4,6 +4,7 @@ import {
   getAllWorkers,
   getTotalSalary,
   getWorkerById,
+  updateWorker,
 } from "../controllers/worker.controller";
 import { requireSignin } from "../middlewares";
 
@@ -13,5 +14,6 @@ router.post("/create", createWorker as any);
 router.get("/", requireSignin as any, getAllWorkers as any);
 router.get("/details", requireSignin as any, getWorkerById as any);
 router.get("/totalSalary", requireSignin as any, getTotalSalary as any);
+router.patch("/update", requireSignin as any, updateWorker as any);
 
 export default router;
