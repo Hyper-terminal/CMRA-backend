@@ -4,7 +4,39 @@ import { ITask } from "../types/task.type";
 // Define the task schema
 const taskSchema = new Schema<ITask>(
   {
-    description: {
+    clientName: {
+      type: String,
+      required: true,
+    },
+    clientPhone: {
+      type: Number,
+      required: true,
+    },
+    address: {
+      type: String,
+      required: true,
+    },
+
+    dateOfService: {
+      type: Date,
+      required: true,
+    },
+    dateOfCompletion: {
+      type: Date,
+      required: true,
+    },
+
+    amount: {
+      type: Number,
+      required: true,
+    },
+
+    areaOfService: {
+      type: Number,
+      required: true,
+    },
+
+    additionalInfo: {
       type: String,
       required: true,
     },
