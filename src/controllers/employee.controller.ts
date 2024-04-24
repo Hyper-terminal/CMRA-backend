@@ -111,7 +111,7 @@ export const getEmployeeById = async (req: IRequest, res: Response) => {
 
 export const updateEmployee = async (req: IRequest, res: Response) => {
   try {
-    const existingEmployee = await Employee.findById(req.params.id);
+    const existingEmployee = await Employee.findById(req.body._id);
 
     if (!existingEmployee) {
       return ResponseHandler.error(res, 404, "Employee not found");

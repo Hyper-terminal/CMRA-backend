@@ -15,7 +15,7 @@ export const requireSignin = (
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
-    return res.status(401).json({ error: "Unauthorized access" });
+    return ResponseHandler.error(res, 401, "Unauthorized access");
   }
 
   try {
@@ -24,10 +24,10 @@ export const requireSignin = (
     next();
   } catch (error: any) {
     if (error.name === "TokenExpiredError") {
-      return res.status(401).json({ error: "Token has expired" });
+      return ResponseHandler.error(res, 401, "Token has expired");
     }
     if (error.name === "JsonWebTokenError") {
-      return res.status(401).json({ error: "Invalid token" });
+      return ResponseHandler.error(res, 401, "Invalid token");
     }
     // Handle other errors as needed
     return ResponseHandler.internalServerError(res, error);

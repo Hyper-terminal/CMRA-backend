@@ -112,7 +112,7 @@ export const getWorkerById = async (req: IRequest, res: Response) => {
 
 export const updateWorker = async (req: IRequest, res: Response) => {
   try {
-    const existingWorker = await Worker.findById(req.params.id);
+    const existingWorker = await Worker.findById(req.body._id);
 
     if (!existingWorker) {
       return ResponseHandler.error(res, 404, "Worker not found");
