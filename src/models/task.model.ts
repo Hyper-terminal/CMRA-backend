@@ -23,7 +23,7 @@ const taskSchema = new Schema<ITask>(
     },
     dateOfCompletion: {
       type: Date,
-      required: true,
+      required: false,
     },
 
     amount: {
