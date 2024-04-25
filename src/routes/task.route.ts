@@ -4,7 +4,7 @@ import { requireSignin } from "../middlewares";
 
 const router = express.Router();
 
-router.post("/create", requireSignin as any, createTask as any);
+router.post("/create", createTask as any);
 router.get("/", requireSignin as any, getAllTasks as any);
 
 export default router;

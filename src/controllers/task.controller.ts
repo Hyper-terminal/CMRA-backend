@@ -5,10 +5,32 @@ import Task from "../models/task.model";
 
 export const createTask = async (req: IRequest, res: Response) => {
   try {
-    const { name, description } = req.body;
+    const {
+      assignedWorkers,
+      assignedServiceManager,
+      service,
+      areaOfService,
+      amount,
+      dateOfService,
+      dateOfCompletion,
+      clientPhone,
+      address,
+      additionalInfo,
+      clientName,
+    } = req.body;
+
     const newTask = new Task({
-      name,
-      description,
+      assignedWorkers,
+      assignedServiceManager,
+      service,
+      areaOfService,
+      amount,
+      dateOfService,
+      dateOfCompletion,
+      clientPhone,
+      address,
+      additionalInfo,
+      clientName,
     });
 
     await newTask.save();
