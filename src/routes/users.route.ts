@@ -8,7 +8,7 @@ import { requireSignin } from "../middlewares";
 
 const router = express.Router();
 
-router.post("/create", requireSignin as any, createEmployee as any);
-router.get("/", requireSignin as any, getAllEmployees as any);
+router.post("/create", requireSignin , createEmployee );
+router.get("/", requireSignin , getAllEmployees );
 
 export default router;

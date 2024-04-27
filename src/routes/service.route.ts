@@ -7,8 +7,8 @@ import { requireSignin } from "../middlewares";
 
 const router = express.Router();
 
-router.get("/", requireSignin as any, getAllService as any);
+router.get("/", requireSignin, getAllService);
 
-router.get("/totalSalary", requireSignin as any, getTotalSalary as any);
+router.get("/totalSalary", requireSignin, getTotalSalary);
 
 export default router;

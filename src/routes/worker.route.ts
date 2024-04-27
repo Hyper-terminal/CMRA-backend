@@ -10,10 +10,10 @@ import { requireSignin } from "../middlewares";
 
 const router = express.Router();
 
-router.post("/create", createWorker as any);
-router.get("/", requireSignin as any, getAllWorkers as any);
-router.get("/details", requireSignin as any, getWorkerById as any);
-router.get("/totalSalary", requireSignin as any, getTotalSalary as any);
-router.patch("/update", requireSignin as any, updateWorker as any);
+router.post("/create", requireSignin, createWorker);
+router.get("/", requireSignin, getAllWorkers);
+router.get("/details", requireSignin, getWorkerById);
+router.get("/totalSalary", requireSignin, getTotalSalary);
+router.patch("/update", requireSignin, updateWorker);
 
 export default router;

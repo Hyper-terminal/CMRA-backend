@@ -3,15 +3,12 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import ResponseHandler from "../libs";
 
-export interface IRequest extends Request {
-  user: any;
-}
 
 export const requireSignin = (
-  req: IRequest,
+  req: Request,
   res: Response,
   next: NextFunction
-) => {
+):void => {
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
