@@ -1,11 +1,10 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import ResponseHandler from "../libs";
-import { IRequest } from "../middlewares";
 import Employee from "../models/employee.model";
 import Task from "../models/task.model";
 import { IEmployee } from "../types/employee.type";
 
-export const createEmployee = async (req: IRequest, res: Response) => {
+export const createEmployee = async (req: Request, res: Response) => {
   try {
     const {
       name,
@@ -48,7 +47,7 @@ export const createEmployee = async (req: IRequest, res: Response) => {
   }
 };
 
-export const getAllEmployees = async (req: IRequest, res: Response) => {
+export const getAllEmployees = async (req: Request, res: Response) => {
   try {
     // extract query params
     const { search, page = 1, pageSize = 20 } = req.query;
@@ -80,7 +79,7 @@ export const getAllEmployees = async (req: IRequest, res: Response) => {
   }
 };
 
-export const getTotalSalary = async (req: IRequest, res: Response) => {
+export const getTotalSalary = async (req: Request, res: Response) => {
   try {
     const results = await Employee.aggregate([
       {
@@ -96,7 +95,7 @@ export const getTotalSalary = async (req: IRequest, res: Response) => {
   }
 };
 
-export const getEmployeeById = async (req: IRequest, res: Response) => {
+export const getEmployeeById = async (req: Request, res: Response) => {
   try {
     const { id } = req.query;
     const results = await Employee.findById(id).populate({
@@ -109,7 +108,7 @@ export const getEmployeeById = async (req: IRequest, res: Response) => {
   }
 };
 
-export const updateEmployee = async (req: IRequest, res: Response) => {
+export const updateEmployee = async (req: Request, res: Response) => {
   try {
     const existingEmployee = await Employee.findById(req.body._id);
 
@@ -128,6 +127,42 @@ export const updateEmployee = async (req: IRequest, res: Response) => {
     );
   } catch (error) {
     // If an error occurs, send an error message in the response.
+    return ResponseHandler.internalServerError(res, error);
+  }
+};
+
+// Function to retrieve tasks assigned to a specific employee
+export const getEmployeeTasks = async (req: Request, res: Response) => {
+  try {
+    // Extract employee ID and search parameters from query
+    const { employeeId, search, page = 1, pageSize = 20 } = req.query;
+    // Validate employee ID
+    if (!employeeId) {
+      return ResponseHandler.error(res, 400, "Employee ID is required");
+    }
+
+    // Find employee by ID
+    const employee = await Employee.findById(employeeId);
+    // Check if employee exists
+    if (!employee) {
+      return ResponseHandler.error(res, 404, "Employee not found");
+    }
+
+    // Construct match query for tasks based on search term
+    const matchQuery = search ? { name: { $regex: new RegExp(search as string, 'i') } } : {};
+    // Count total tasks that match the query
+    const totalCount = await Task.countDocuments({ _id: { $in: employee.tasks }, ...matchQuery });
+
+    // Retrieve tasks based on query, sorted by last updated date
+    const tasks = await Task.find({ _id: { $in: employee.tasks }, ...matchQuery })
+      .sort({ updatedAt: -1 })
+      .skip((page as number - 1) * parseInt(pageSize as any))
+      .limit(parseInt(pageSize as string));
+
+    // Respond with success and the tasks assigned to the employee
+    return ResponseHandler.success(res, "", { tasks, totalCount });
+  } catch (error) {
+    // If an error occurs, respond with an internal server error message
     return ResponseHandler.internalServerError(res, error);
   }
 };

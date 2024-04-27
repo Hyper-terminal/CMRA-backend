@@ -1,11 +1,10 @@
 import { Response } from "express";
-import { IRequest } from "../middlewares";
 import Service from "../models/service.model";
 import ResponseHandler from "../libs";
 import Employee from "../models/employee.model";
 import Worker from "../models/worker.model";
 
-export const getAllService = async (req: IRequest, res: Response) => {
+export const getAllService = async (req: Request, res: Response) => {
   try {
     const results = await Service.find();
     return ResponseHandler.success(res, "", results);
@@ -14,7 +13,7 @@ export const getAllService = async (req: IRequest, res: Response) => {
   }
 };
 
-export const getTotalSalary = async (req: IRequest, res: Response) => {
+export const getTotalSalary = async (req: Request, res: Response) => {
   try {
     // Execute both aggregation queries concurrently using Promise.all
     const [employeeResults, workerResults] = await Promise.all([

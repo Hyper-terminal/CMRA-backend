@@ -3,6 +3,7 @@ import {
   createEmployee,
   getAllEmployees,
   getEmployeeById,
+  getEmployeeTasks,
   getTotalSalary,
   updateEmployee,
 } from "../controllers/employee.controller";
@@ -15,5 +16,6 @@ router.get("/", requireSignin, getAllEmployees);
 router.get("/details", getEmployeeById);
 router.get("/totalSalary", requireSignin, getTotalSalary);
 router.patch("/update", requireSignin, updateEmployee);
+router.get("/tasks", requireSignin, getEmployeeTasks);
 
 export default router;

@@ -1,9 +1,8 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import ResponseHandler from "../libs";
-import { IRequest } from "../middlewares";
 import Task from "../models/task.model";
 
-export const createTask = async (req: IRequest, res: Response) => {
+export const createTask = async (req: Request, res: Response) => {
   try {
     const {
       assignedWorkers,
@@ -41,7 +40,7 @@ export const createTask = async (req: IRequest, res: Response) => {
   }
 };
 
-export const getAllTasks = async (req: IRequest, res: Response) => {
+export const getAllTasks = async (req: Request, res: Response) => {
   try {
     const results = await Task.find();
     return ResponseHandler.success(res, "", results);

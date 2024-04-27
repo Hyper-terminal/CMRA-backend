@@ -1,11 +1,10 @@
-import { Response } from "express";
+import { Request, Response } from "express";
 import ResponseHandler from "../libs";
-import { IRequest } from "../middlewares";
 import Task from "../models/task.model";
 import Worker from "../models/worker.model";
 import { IWorker } from "../types/worker.type";
 
-export const createEmployee = async (req: IRequest, res: Response) => {
+export const createEmployee = async (req: Request, res: Response) => {
   try {
     const {
       name,
@@ -44,7 +43,7 @@ export const createEmployee = async (req: IRequest, res: Response) => {
   }
 };
 
-export const getAllEmployees = async (req: IRequest, res: Response) => {
+export const getAllEmployees = async (req: Request, res: Response) => {
   try {
     // extract query params
     const { search, page = 1, pageSize = 20 } = req.query;
