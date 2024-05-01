@@ -1,9 +1,13 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Model, Schema } from "mongoose";
 import { ITask } from "../types/task.type";
 
 // Define the task schema
 const taskSchema = new Schema<ITask>(
   {
+    taskId: {
+      type: String,
+      unique: true,
+    },
     clientName: {
       type: String,
       required: true,
@@ -64,6 +68,32 @@ const taskSchema = new Schema<ITask>(
   },
   { timestamps: true }
 );
+
+taskSchema.pre<ITask>("save", async function (next) {
+  const constructorMethod = this.constructor as Model<ITask>;
+  if (!this.isNew) {
+    return next();
+  }
+
+  try {
+    const lastTask = await constructorMethod.findOne(
+      {},
+      {},
+      { sort: { taskId: -1 } }
+    );
+
+    if (lastTask) {
+      const newIncrementalId = parseInt(lastTask.taskId) + 1;
+      this.taskId = newIncrementalId.toString().padStart(4, "0");
+    } else {
+      this.taskId = "0001";
+    }
+
+    return next();
+  } catch (error: any) {
+    return next(error);
+  }
+});
 
 // Create and export the task model
 const Task = mongoose.model<ITask>("Task", taskSchema);

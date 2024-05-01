@@ -1,6 +1,7 @@
 import { Document, Types } from "mongoose";
 
 export interface ITask extends Document {
+  taskId: string;
   status: "Pending" | "Completed" | "Not Assigned" | "Assigned";
   assignedWorkers: Types.ObjectId[];
   assignedServiceManager: Types.ObjectId[];
