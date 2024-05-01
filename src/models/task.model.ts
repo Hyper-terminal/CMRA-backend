@@ -42,7 +42,7 @@ const taskSchema = new Schema<ITask>(
     },
     status: {
       type: String,
-      enum: ["Pending", "Completed", "Not Assigned"],
+      enum: ["Pending", "Completed", "Not Assigned", "Assigned"],
       default: "Not Assigned",
     },
     assignedWorkers: [

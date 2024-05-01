@@ -3,6 +3,7 @@ import ResponseHandler from "../libs";
 import Employee from "../models/employee.model";
 import Task from "../models/task.model";
 import { IEmployee } from "../types/employee.type";
+import { uniqueMobileInEmployeeAndWorker } from "../utils/helper";
 
 export const createEmployee = async (req: Request, res: Response) => {
   try {
@@ -18,6 +19,12 @@ export const createEmployee = async (req: Request, res: Response) => {
 
     if (familyDetails?.length < 1) {
       return ResponseHandler.error(res, 400, "Please provide family details");
+    }
+
+    // validate number
+    const isUnique = await uniqueMobileInEmployeeAndWorker(contact.phone);
+    if (!isUnique) {
+      return ResponseHandler.error(res, 400, "Mobile number already exists");
     }
 
     // Create a new Employee document
@@ -149,14 +156,22 @@ export const getEmployeeTasks = async (req: Request, res: Response) => {
     }
 
     // Construct match query for tasks based on search term
-    const matchQuery = search ? { name: { $regex: new RegExp(search as string, 'i') } } : {};
+    const matchQuery = search
+      ? { name: { $regex: new RegExp(search as string, "i") } }
+      : {};
     // Count total tasks that match the query
-    const totalCount = await Task.countDocuments({ _id: { $in: employee.tasks }, ...matchQuery });
+    const totalCount = await Task.countDocuments({
+      _id: { $in: employee.tasks },
+      ...matchQuery,
+    });
 
     // Retrieve tasks based on query, sorted by last updated date
-    const tasks = await Task.find({ _id: { $in: employee.tasks }, ...matchQuery })
+    const tasks = await Task.find({
+      _id: { $in: employee.tasks },
+      ...matchQuery,
+    })
       .sort({ updatedAt: -1 })
-      .skip((page as number - 1) * parseInt(pageSize as any))
+      .skip(((page as number) - 1) * parseInt(pageSize as any))
       .limit(parseInt(pageSize as string));
 
     // Respond with success and the tasks assigned to the employee

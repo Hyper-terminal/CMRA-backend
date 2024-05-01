@@ -3,6 +3,7 @@ import ResponseHandler from "../libs";
 import Task from "../models/task.model";
 import Worker from "../models/worker.model";
 import { IWorker } from "../types/worker.type";
+import { uniqueMobileInEmployeeAndWorker } from "../utils/helper";
 
 // Function to create a new worker
 export const createWorker = async (req: Request, res: Response) => {
@@ -21,6 +22,12 @@ export const createWorker = async (req: Request, res: Response) => {
     // Validate family details
     if (familyDetails?.length < 1) {
       return ResponseHandler.error(res, 400, "Please provide family details");
+    }
+
+    // validate number
+    const isUnique = await uniqueMobileInEmployeeAndWorker(contact.phone);
+    if (!isUnique) {
+      return ResponseHandler.error(res, 400, "Mobile number already exists");
     }
 
     // Create a new worker document
@@ -174,20 +181,44 @@ export const getWorkerTasks = async (req: Request, res: Response) => {
     }
 
     // Construct match query for tasks based on search term
-    const matchQuery = search ? { name: { $regex: new RegExp(search as string, 'i') } } : {};
+    const matchQuery = search
+      ? { name: { $regex: new RegExp(search as string, "i") } }
+      : {};
     // Count total tasks that match the query
-    const totalCount = await Task.countDocuments({ _id: { $in: worker.tasks }, ...matchQuery });
+    const totalCount = await Task.countDocuments({
+      _id: { $in: worker.tasks },
+      ...matchQuery,
+    });
 
     // Retrieve tasks based on query, sorted by last updated date
     const tasks = await Task.find({ _id: { $in: worker.tasks }, ...matchQuery })
       .sort({ updatedAt: -1 })
-      .skip((page as number - 1) * parseInt(pageSize as any))
+      .skip(((page as number) - 1) * parseInt(pageSize as any))
       .limit(parseInt(pageSize as string));
 
     // Respond with success and the tasks assigned to the worker
     return ResponseHandler.success(res, "", { tasks, totalCount });
   } catch (error) {
     // If an error occurs, respond with an internal server error message
+    return ResponseHandler.internalServerError(res, error);
+  }
+};
+
+export const assignTaskToWorker = async (req: Request, res: Response) => {
+  try {
+    const { taskId, workerId } = req.body;
+    const worker = await Worker.findById(workerId);
+    if (!worker) {
+      return ResponseHandler.error(res, 404, "Worker not found");
+    }
+    worker.tasks.push(taskId);
+    await worker.save();
+    return ResponseHandler.success(
+      res,
+      "Task assigned to worker successfully",
+      worker
+    );
+  } catch (error) {
     return ResponseHandler.internalServerError(res, error);
   }
 };
