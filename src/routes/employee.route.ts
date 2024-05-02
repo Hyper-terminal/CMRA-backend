@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  assignTaskToEmployee,
   createEmployee,
   getAllEmployees,
   getEmployeeById,
@@ -17,5 +18,6 @@ router.get("/details", getEmployeeById);
 router.get("/totalSalary", requireSignin, getTotalSalary);
 router.patch("/update", requireSignin, updateEmployee);
 router.get("/tasks", requireSignin, getEmployeeTasks);
+router.patch("/assign-task", requireSignin, assignTaskToEmployee);
 
 export default router;

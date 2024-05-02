@@ -4,6 +4,7 @@ import Task from "../models/task.model";
 import Worker from "../models/worker.model";
 import { IWorker } from "../types/worker.type";
 import { uniqueMobileInEmployeeAndWorker } from "../utils/helper";
+import { startSession } from "mongoose";
 
 // Function to create a new worker
 export const createWorker = async (req: Request, res: Response) => {
@@ -205,20 +206,41 @@ export const getWorkerTasks = async (req: Request, res: Response) => {
 };
 
 export const assignTaskToWorker = async (req: Request, res: Response) => {
+  const session = await startSession();
   try {
+    session.startTransaction();
     const { taskId, workerId } = req.body;
-    const worker = await Worker.findById(workerId);
+    const worker = await Worker.findById(workerId).session(session);
+    const task = await Task.findById(taskId).session(session);
+
     if (!worker) {
+      await session.abortTransaction();
       return ResponseHandler.error(res, 404, "Worker not found");
     }
+    if (!task) {
+      await session.abortTransaction();
+      return ResponseHandler.error(res, 404, "Task not found");
+    }
+
+    // Update task status and assigned workers
+    task.status = "Assigned";
+    task.assignedWorkers.push(worker._id);
+    await task.save({ session });
+
+    // Assign task to worker
     worker.tasks.push(taskId);
-    await worker.save();
+    await worker.save({ session });
+
+    await session.commitTransaction();
     return ResponseHandler.success(
       res,
       "Task assigned to worker successfully",
-      worker
+      { worker, task }
     );
   } catch (error) {
+    await session.abortTransaction();
     return ResponseHandler.internalServerError(res, error);
+  } finally {
+    session.endSession();
   }
 };
