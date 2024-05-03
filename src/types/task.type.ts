@@ -2,7 +2,7 @@ import { Document, Types } from "mongoose";
 
 export interface ITask extends Document {
   taskId: string;
-  status: "Pending" | "Completed" | "Not Assigned" | "Assigned";
+  status: "Pending" | "Completed" | "Not Assigned" | "Assigned" | "Started";
   assignedWorkers: Types.ObjectId[];
   assignedServiceManager: Types.ObjectId[];
   service: Types.ObjectId;
@@ -14,4 +14,5 @@ export interface ITask extends Document {
   address: string;
   additionalInfo: string;
   clientName: string;
+  otp: string;
 }

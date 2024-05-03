@@ -65,6 +65,9 @@ const taskSchema = new Schema<ITask>(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Service",
     },
+    otp: {
+      type: String,
+    },
   },
   { timestamps: true }
 );
