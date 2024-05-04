@@ -91,7 +91,7 @@ export const generateOtp = async (req: Request, res: Response) => {
       .toString()
       .padStart(4, "0")
       .slice(0, 4);
-    const hashedOtp = await bcrypt.hash(otp, 10);
+    const hashedOtp = await bcrypt.hash(String(otp), 10);
     const otpExpires = new Date();
     otpExpires.setMinutes(otpExpires.getMinutes() + 5);
 
@@ -119,10 +119,11 @@ export const verifyOtp = async (req: Request, res: Response) => {
       return ResponseHandler.error(res, 400, "OTP has expired");
     }
 
-    const isOtpValid = await bcrypt.compare(otp, task.otp);
+    const isOtpValid = await bcrypt.compare(String(otp), String(task.otp));
     if (!isOtpValid) {
       return ResponseHandler.error(res, 400, "Invalid OTP");
     }
+
     return ResponseHandler.success(res, "OTP verified successfully");
   } catch (error) {
     return ResponseHandler.internalServerError(res, error);
