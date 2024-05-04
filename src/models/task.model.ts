@@ -68,6 +68,9 @@ const taskSchema = new Schema<ITask>(
     otp: {
       type: String,
     },
+    otpExpires: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

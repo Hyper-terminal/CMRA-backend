@@ -15,4 +15,5 @@ export interface ITask extends Document {
   additionalInfo: string;
   clientName: string;
   otp: string;
+  otpExpires: Date;
 }
