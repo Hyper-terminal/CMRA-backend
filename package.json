@@ -21,6 +21,8 @@
     "hpp": "^0.2.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.2.0",
+    "morgan": "^1.10.0",
+    "twilio": "^5.1.1",
     "xss": "^1.0.15"
   },
   "devDependencies": {
@@ -30,6 +32,7 @@
     "@types/hpp": "^0.2.6",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/mongoose": "^5.11.97",
+    "@types/morgan": "^1.9.9",
     "@types/node": "^20.11.19",
     "nodemon": "^3.0.3",
     "ts-node": "^10.9.2",

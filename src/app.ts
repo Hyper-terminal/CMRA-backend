@@ -1,8 +1,9 @@
 import cors from "cors";
 import dotenv from "dotenv";
-import express, { Express } from "express";
+import express, { Express, Request } from "express";
 import helmet from "helmet";
 import hpp from "hpp";
+import morgan from "morgan";
 import database from "./libs/database";
 import {
   authRoutes,
@@ -22,6 +23,14 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+morgan.token("body", (req: Request) =>
+  req.body && req.method !== "GET" ? JSON.stringify(req.body) : ""
+);
+app.use(
+  morgan(
+    "Method- :method URL- :url Status- :status Response-Time- :response-time ms Payload- :body"
+  )
+);
 
 // set security HTTP headers
 app.use(helmet());

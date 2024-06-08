@@ -1,8 +1,9 @@
+import bcrypt from "bcrypt";
+import { randomBytes } from "crypto";
 import { Request, Response } from "express";
+import { Worker } from "worker_threads";
 import ResponseHandler from "../libs";
 import Task from "../models/task.model";
-import { randomBytes } from "crypto";
-import bcrypt from "bcrypt";
 import { ITask } from "../types/task.type";
 
 export const createTask = async (req: Request, res: Response) => {
@@ -78,6 +79,19 @@ export const startTask = async (req: Request, res: Response) => {
   }
 };
 
+const sendOtpToClient = async (phone: number, otp: string) => {
+  const worker = new Worker("../libs/twilio.ts", {
+    workerData: { phone, otp },
+  });
+  worker.on("message", (message) =>
+    console.log("Message from worker:", message)
+  );
+  worker.on("error", (error) => console.error("Error from worker:", error));
+  worker.on("exit", (code) => {
+    if (code !== 0) console.error(`Worker stopped with exit code ${code}`);
+  });
+};
+
 export const generateOtp = async (req: Request, res: Response) => {
   try {
     const { taskId } = req.body;
@@ -98,7 +112,7 @@ export const generateOtp = async (req: Request, res: Response) => {
     task.otp = hashedOtp;
     task.otpExpires = otpExpires;
     await task.save();
-    await task.save();
+    sendOtpToClient(task.clientPhone, otp);
 
     return ResponseHandler.success(res, "OTP generated successfully", { otp });
   } catch (error) {
