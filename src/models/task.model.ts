@@ -42,7 +42,7 @@ const taskSchema = new Schema<ITask>(
 
     additionalInfo: {
       type: String,
-      required: true,
+      required: false,
     },
     status: {
       type: String,
