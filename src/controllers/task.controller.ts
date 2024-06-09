@@ -132,3 +132,17 @@ export const verifyOtp = async (req: Request, res: Response) => {
     return ResponseHandler.internalServerError(res, error);
   }
 };
+
+export const getTaskById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const task = await Task.findById(id).select("-otp -otpExpires");
+    if (!task) {
+      return ResponseHandler.error(res, 404, "Task not found");
+    }
+    return ResponseHandler.success(res, "", task);
+  } catch (error) {
+    return ResponseHandler.internalServerError(res, error);
+  }
+};
