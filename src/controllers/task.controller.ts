@@ -45,7 +45,10 @@ export const createTask = async (req: Request, res: Response) => {
 
 export const getAllTasks = async (req: Request, res: Response) => {
   try {
-    const results = await Task.find();
+    const results = await Task.find()
+      .select("-otp -otpExpires")
+      .populate("service")
+      .sort("-createdAt");
     return ResponseHandler.success(res, "", results);
   } catch (error) {
     return ResponseHandler.internalServerError(res, error);
@@ -137,7 +140,11 @@ export const getTaskById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const task = await Task.findById(id).select("-otp -otpExpires");
+    const task = await Task.findById(id)
+      .select("-otp -otpExpires")
+      .populate("assignedWorkers")
+      .populate("assignedServiceManager")
+      .populate("service");
     if (!task) {
       return ResponseHandler.error(res, 404, "Task not found");
     }
