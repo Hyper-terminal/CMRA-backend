@@ -11,6 +11,10 @@ const serviceSchema = new Schema<IService>({
     required: true,
     unique: true, // Ensure each service has a unique value
   },
+  costOfService: {
+    type: Number,
+    required: true,
+  },
 });
 
 const Service = mongoose.model<IService>("Service", serviceSchema);
@@ -24,11 +28,11 @@ const seedServices = async () => {
     if (existingServices.length === 0) {
       // If no services exist, seed the initial services
       const initialServices = [
-        { label: "Fumigation", value: "Fumigation" },
-        { label: "Plumbing", value: "Plumbing" },
-        { label: "Termite", value: "Termite" },
-        { label: "Fleas", value: "Fleas" },
-        { label: "Pest Control", value: "Pest Control" },
+        { label: "Fumigation", value: "Fumigation", costOfService: 1000 },
+        { label: "Plumbing", value: "Plumbing", costOfService: 1000 },
+        { label: "Termite", value: "Termite", costOfService: 1000 },
+        { label: "Fleas", value: "Fleas", costOfService: 1000 },
+        { label: "Pest Control", value: "Pest Control", costOfService: 1000 },
       ];
 
       // Insert the initial services into the database
